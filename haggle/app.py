@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect
 from flask_socketio import SocketIO
 
 
@@ -30,10 +30,10 @@ def seller_session():
 
 # -- handlers --
 
-# @socketio.on('my event')
-# def handle_my_custom_event(json, methods=['GET', 'POST']):
-#     print(f'Received my event: {json}')
-#     socketio.emit('my response', json, callback=message_received)
+@socketio.on('my event')
+def handle_my_custom_event(json, methods=['GET', 'POST']):
+    print(f'Received my event: {json}')
+    socketio.emit('my response', json, callback=message_received)
 
 
 # -- util --
