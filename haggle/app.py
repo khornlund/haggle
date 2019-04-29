@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 from flask_socketio import SocketIO
 
 
@@ -8,14 +8,21 @@ socketio = SocketIO(app)
 
 # -- routes --
 
+@app.route('/')
+def default():
+    return redirect(url_for('splash'))
+
+
 @app.route('/splash', methods=['GET', 'POST'])
 def splash():
-    if request.method == 'POST':
-        role = request.form['role_btn']
-        print(role)
-        return redirect(f'session/{role}')
-    else:
+    if request.method != 'POST':
         return render_template('splash.html')
+
+    role = request.form['role_btn']
+    if role.lower() == 'buyer':
+        return redirect(url_for('buyer_session'))
+    elif role.lower() == 'seller':
+        return redirect(url_for('seller_session'))
 
 
 @app.route('/session/buyer')
