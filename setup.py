@@ -12,10 +12,12 @@ def read(filename):
     with io.open(filename, mode="r", encoding='utf-8') as fd:
         return re.sub(text_type(r':[a-z]+:`~?(.*?)`'), text_type(r'``\1``'), fd.read())
 
+
 requirements = [
     'flask',
     'flask-socketio'
 ]
+
 
 setup(
     name="haggle",

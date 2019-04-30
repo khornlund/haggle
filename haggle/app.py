@@ -1,5 +1,3 @@
-from uuid import uuid4
-
 from flask import Flask, render_template, request, redirect, url_for, make_response
 from flask_socketio import SocketIO
 
@@ -51,11 +49,21 @@ def session_buyer():
     return render_template('session_buy.html', data=ssn.data)
 
 
-@app.route('/session/seller')
+@app.route('/session/seller', methods=['GET', 'POST'])
 def session_seller():
-    resp = make_response(render_template('session_sell.html'))
-    resp.set_cookie('UUID', sm.new_seller())
-    return resp
+    if request.method != 'POST':
+        ssn = sm.new_seller()
+        resp = make_response(render_template('session_sell.html', data=ssn.data))
+        resp.set_cookie('UUID', ssn.uuid)
+        return resp
+
+    uuid = request.cookies.get('UUID')
+    for k, v in request.form.items():
+        print(f'k: {k}, v: {v}')
+    msg = request.form['message']
+    ssn = sm.sellers[uuid]
+    resp = ssn.receive(msg)
+    return render_template('session_sell.html', data=ssn.data)
 
 
 # -- handlers --

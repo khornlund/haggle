@@ -32,6 +32,12 @@ class SessionBase(abc.ABC):
         self._timestamp()
         self._chatlog = []
 
+        m = self._model.start()
+        if self.is_human_buyer:
+            self._log_seller_msg(m)
+        else:
+            self._log_buyer_msg(m)
+
     @property
     def uuid(self):
         return self._uuid
@@ -72,7 +78,7 @@ class SessionBase(abc.ABC):
     def data(self):
         return {
             'type': self.__class__.__name__,
-            'last': self._last_time.strftime('%Y-%m-%d %H:%M:%S'),
+            'last': self._last_time.strftime('%c'),
             'log': self._chatlog
         }
 

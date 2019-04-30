@@ -6,11 +6,22 @@
 </head>
 <body>
 
-<h3 style='color: #ccc;font-size: 30px;'>No message yet..</h3>
-<div class="message_holder"></div>
+<h2>{{ data.type }}</h2>
 
-<form action="" method="POST">
-    <input type="text" class="message" placeholder="Messages"/>
+<h3>Messages</h3>
+
+<table>
+{% for msg in data.log %}
+<TR>
+    <TD>{{ msg.timestamp }}</TD>
+    <TD>{{ msg.role }}</TD>
+    <TD>"{{ msg.message }}"</TD>
+</TR>
+{% endfor %}
+</table>
+
+<form action="{{ url_for('session_seller') }}" method="POST">
+    <input type="text" name="message" placeholder="Messages"/>
     <input type="submit"/>
 </form>
 

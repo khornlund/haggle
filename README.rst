@@ -1,22 +1,22 @@
 haggle
 ======
 
-Short description
-
-Usage
------
+Flask web app for deploying NLP haggling model trained on Craigslist data.
 
 Installation
 ------------
 
-Requirements
-^^^^^^^^^^^^
+.. code:: bash
 
-Compatibility
--------------
+    python setup.py install
 
-Licence
--------
+Usage
+-----
+
+.. code:: bash
+
+    python haggle/app.py
+
 
 Authors
 -------
