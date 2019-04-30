@@ -41,8 +41,6 @@ def session_buyer():
         return resp
 
     uuid = request.cookies.get('UUID')
-    for k, v in request.form.items():
-        print(f'k: {k}, v: {v}')
     msg = request.form['message']
     ssn = sm.buyers[uuid]
     resp = ssn.receive(msg)
@@ -58,8 +56,6 @@ def session_seller():
         return resp
 
     uuid = request.cookies.get('UUID')
-    for k, v in request.form.items():
-        print(f'k: {k}, v: {v}')
     msg = request.form['message']
     ssn = sm.sellers[uuid]
     resp = ssn.receive(msg)
