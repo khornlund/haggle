@@ -14,8 +14,7 @@ def read(filename):
 
 
 requirements = [
-    'flask',
-    'flask-socketio'
+
 ]
 
 
