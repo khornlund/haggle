@@ -29,21 +29,31 @@ def splash():
 
     role = request.form['role_btn']
     if role.lower() == 'buyer':
-        return redirect(url_for('buyer_session'))
+        return redirect(url_for('session_buyer'))
     elif role.lower() == 'seller':
-        return redirect(url_for('seller_session'))
+        return redirect(url_for('session_seller'))
 
 
-@app.route('/session/buyer')
-def buyer_session():
-    resp = make_response(render_template('session.html'))
-    resp.set_cookie('UUID', sm.new_buyer())
-    return resp
+@app.route('/session/buyer', methods=['GET', 'POST'])
+def session_buyer():
+    if request.method != 'POST':
+        ssn = sm.new_buyer()
+        resp = make_response(render_template('session_buy.html', data=ssn.data))
+        resp.set_cookie('UUID', ssn.uuid)
+        return resp
+
+    uuid = request.cookies.get('UUID')
+    for k, v in request.form.items():
+        print(f'k: {k}, v: {v}')
+    msg = request.form['message']
+    ssn = sm.buyers[uuid]
+    resp = ssn.receive(msg)
+    return render_template('session_buy.html', data=ssn.data)
 
 
 @app.route('/session/seller')
-def seller_session():
-    resp = make_response(render_template('session.html'))
+def session_seller():
+    resp = make_response(render_template('session_sell.html'))
     resp.set_cookie('UUID', sm.new_seller())
     return resp
 

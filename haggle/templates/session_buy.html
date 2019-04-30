@@ -1,0 +1,29 @@
+<!--https://codeburst.io/building-your-first-chat-application-using-flask-in-7-minutes-f98de4adfa5d-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Haggle</title>
+</head>
+<body>
+
+<h2>{{ data.type }}</h2>
+
+<h3>Messages</h3>
+
+<table>
+{% for msg in data.log %}
+<TR>
+    <TD>{{ msg.timestamp }}</TD>
+    <TD>{{ msg.role }}</TD>
+    <TD>"{{ msg.message }}"</TD>
+</TR>
+{% endfor %}
+</table>
+
+<form action="{{ url_for('session_buyer') }}" method="POST">
+    <input type="text" name="message" placeholder="Messages"/>
+    <input type="submit"/>
+</form>
+
+</body>
+</html>
