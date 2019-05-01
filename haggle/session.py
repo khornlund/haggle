@@ -3,18 +3,21 @@ import datetime
 from uuid import uuid4
 
 from model import ModelBuyer, ModelSeller
+from elastic import ElasticHandler, ElasticIndices
 
 
 class ChatMessage:
 
+    SESSION   = 'session'
     TIMESTAMP = 'timestamp'
-    IS_HUMAN = 'is_human'
-    ROLE = 'role'
-    MESSAGE = 'message'
+    IS_HUMAN  = 'is-human'
+    ROLE      = 'role'
+    MESSAGE   = 'message'
 
     @classmethod
-    def create(cls, is_human, role, m):
+    def create(cls, session, is_human, role, m):
         return {
+            cls.SESSION: session,
             cls.TIMESTAMP: datetime.datetime.now(),
             cls.IS_HUMAN: is_human,
             cls.ROLE: role,
@@ -31,6 +34,7 @@ class SessionBase(abc.ABC):
         self._model = self.model_factory()
         self._timestamp()
         self._chatlog = []
+        self._es = ElasticHandler()  # TODO: parametrise address
 
         m = self._model.start()
         if self.is_human_buyer:
@@ -66,7 +70,9 @@ class SessionBase(abc.ABC):
         self._log_msg(self.is_human_seller, 'seller', m)
 
     def _log_msg(self, is_human, role, m):
-        self._chatlog.append(ChatMessage.create(is_human, role, m))
+        cm = ChatMessage.create(self.uuid, is_human, role, m)
+        self._chatlog.append(cm)
+        self._es.post(self.es_index, cm)
 
     def _timestamp(self):
         self._last_time = datetime.datetime.now()
@@ -96,6 +102,11 @@ class SessionBase(abc.ABC):
     def is_human_seller(self):
         pass
 
+    @property
+    @abc.abstractmethod
+    def es_index(self):
+        pass
+
 
 class SessionHumanBuyer(SessionBase):
 
@@ -109,6 +120,10 @@ class SessionHumanBuyer(SessionBase):
     @property
     def is_human_seller(self):
         return False
+
+    @property
+    def es_index(self):
+        return ElasticIndices.HUMAN_BUYER
 
     def model_factory(self):
         return ModelBuyer('Car')
@@ -126,6 +141,10 @@ class SessionHumanSeller(SessionBase):
     @property
     def is_human_seller(self):
         return True
+
+    @property
+    def es_index(self):
+        return ElasticIndices.HUMAN_SELLER
 
     def model_factory(self):
         return ModelSeller('House')
