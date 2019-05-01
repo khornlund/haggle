@@ -1,0 +1,13 @@
+h3 {
+	font-size: 24px;
+	color: black;
+}
+
+input {
+    font-size: 24px;
+    height: 40px;
+    width: 100px;
+    left: 250;
+    top: 250;
+	color: black;
+}
