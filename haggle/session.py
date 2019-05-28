@@ -2,8 +2,8 @@ import abc
 import datetime
 from uuid import uuid4
 
-from model import ModelBuyer, ModelSeller
-from elastic import ElasticHandler, ElasticIndices
+from haggle.elastic import ElasticHandler, ElasticIndices
+from haggle.model import ModelBuyer, ModelSeller
 
 
 class ChatMessage:

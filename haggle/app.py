@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, make_response
 from flask_socketio import SocketIO
 
-from session import SessionManager
+from haggle.session import SessionManager
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = b';M\x7f\x9b\x83^b\x84\xb3\x1f/\xe0d\x01\xb4?J\xc4!\x10'

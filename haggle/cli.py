@@ -10,8 +10,8 @@ def cli():
 
 
 @cli.command()
-@cli.option('-i', '--ip-address', type=str, help='IP Address to host webapp')
-def webapp(ip_address):
+# @click.option('-i', '--ip-address', type=str, help='IP Address to host webapp')
+def webapp():
     """Run the Flask web app"""
     socketio.run(app, debug=True)
 
