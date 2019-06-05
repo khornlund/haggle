@@ -11,5 +11,6 @@ dependencies:
   - elasticsearch
   - click
   - jupyter
+  - flake8
   - pip:
     - -e .
