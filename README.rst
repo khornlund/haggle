@@ -9,10 +9,8 @@ Use Anaconda to create and environment and install the necessary packages.
 
 .. code:: bash
 
-    conda create --name haggle python=3.6
+    conda env create --file environment.yaml
     conda activate haggle
-    conda install --file requirements.txt
-    python setup.py develop
 
 Usage
 -----
