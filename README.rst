@@ -1,4 +1,4 @@
-haggle
+Haggle
 ======
 
 Flask web app for deploying NLP haggling model trained on Craigslist data.
