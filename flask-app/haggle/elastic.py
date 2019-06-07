@@ -6,8 +6,8 @@ class ElasticHandler:
 
     DOC_TYPE = 'chat-message'
 
-    def __init__(self, ip_address=0):
-        self._es = Elasticsearch()
+    def __init__(self, host='es'):
+        self._es = Elasticsearch(host=host)
 
     def post(self, index, chat_message):
         """Post a chat message to the elasticsearch database"""
