@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# teardown existing
+./teardown-docker.sh
+
 # build the flask container
 docker build -t khornlund/haggle .
 

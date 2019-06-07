@@ -2,15 +2,12 @@ from flask import Flask, render_template, request, redirect, url_for, make_respo
 from flask_socketio import SocketIO
 
 from haggle.session import SessionManager
+from haggle.logger import setup_logging, setup_logger
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = b';M\x7f\x9b\x83^b\x84\xb3\x1f/\xe0d\x01\xb4?J\xc4!\x10'
 socketio = SocketIO(app)
-
-
-# -- resources --
-
-sm = SessionManager()
+logger = setup_logger('haggle-webapp')
 
 
 # -- routes --
@@ -35,14 +32,14 @@ def splash():
 @app.route('/session/buyer', methods=['GET', 'POST'])
 def session_buyer():
     if request.method != 'POST':
-        ssn = sm.new_buyer()
+        ssn = SessionManager().new_buyer()
         resp = make_response(render_template('session_buy.html', data=ssn.data))
         resp.set_cookie('UUID', ssn.uuid)
         return resp
 
     uuid = request.cookies.get('UUID')
     msg = request.form['message']
-    ssn = sm.buyers[uuid]
+    ssn = SessionManager().buyers[uuid]
     resp = ssn.receive(msg)
     return render_template('session_buy.html', data=ssn.data)
 
@@ -50,14 +47,14 @@ def session_buyer():
 @app.route('/session/seller', methods=['GET', 'POST'])
 def session_seller():
     if request.method != 'POST':
-        ssn = sm.new_seller()
+        ssn = SessionManager().new_seller()
         resp = make_response(render_template('session_sell.html', data=ssn.data))
         resp.set_cookie('UUID', ssn.uuid)
         return resp
 
     uuid = request.cookies.get('UUID')
     msg = request.form['message']
-    ssn = sm.sellers[uuid]
+    ssn = SessionManager().sellers[uuid]
     resp = ssn.receive(msg)
     return render_template('session_sell.html', data=ssn.data)
 
@@ -67,15 +64,20 @@ def session_seller():
 @socketio.on('my event')
 def handle_my_custom_event(json, methods=['GET', 'POST']):
     uuid = request.cookies.get('UUID')
-    print(f'Received my event {json} from session {uuid}')
+    logger.info(f'Received my event {json} from session {uuid}')
     socketio.emit('my response', json, callback=message_received)
 
 
 # -- util --
 
 def message_received(methods=['GET', 'POST']):
-    print('Message received!')
+    logger.info('Message received!')
 
 
-if __name__ == '__main__':
-    socketio.run(host='0.0.0.0', port=5000, debug=True)
+# -- top level entry point --
+
+def main(host, port, db_host, debug):
+    setup_logging()
+    sm = SessionManager()
+    sm.set_db_host(db_host)  # set property on singleton
+    socketio.run(app, host=host, port=port, debug=True)

@@ -1,6 +1,6 @@
 import click
 
-from haggle.app import socketio, app
+from haggle.app import main
 
 
 @click.group()
@@ -10,19 +10,11 @@ def cli():
 
 
 @cli.command()
-# @click.option('-i', '--ip-address', type=str, help='IP Address to host webapp')
-def webapp():
-    """Run the Flask web app"""
-    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
-
-
-@cli.command()
-def start_es():
-    """Start elasticsearch"""
-    pass
-
-
-@cli.command()
-def stop_es():
-    """Stop elasticsearch"""
-    pass
+@click.option('-h', '--host', type=str, default='0.0.0.0', help='IP Address to host webapp')
+@click.option('-p', '--port', type=int, default=5000, help='Port to host webapp')
+@click.option('-e', '--elasticsearch-host', type=str, default='es',
+              help='Host address of Elasticsearch database')
+@click.option('-d', '--debug', is_flag=True, default=False, help='Flag to run in debug mode')
+def webapp(host, port, elasticsearch_host, debug):
+    """CLI to start the Flask web app"""
+    main(host, port, elasticsearch_host, debug)

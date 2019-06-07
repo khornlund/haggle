@@ -29,12 +29,13 @@ class SessionBase(abc.ABC):
 
     timeout_timedelta = datetime.timedelta(seconds=10 * 60)  # 10 minutes
 
-    def __init__(self):
+    def __init__(self, db_host):
+        self._db_host = db_host
         self._uuid = str(uuid4())
         self._model = self.model_factory()
         self._timestamp()
         self._chatlog = []
-        self._es = ElasticHandler()  # TODO: parametrise address
+        self._es = ElasticHandler(host=self._db_host)
 
         m = self._model.start()
         if self.is_human_buyer:
@@ -110,9 +111,6 @@ class SessionBase(abc.ABC):
 
 class SessionHumanBuyer(SessionBase):
 
-    def __init__(self):
-        super(SessionHumanBuyer, self).__init__()
-
     @property
     def is_human_buyer(self):
         return True
@@ -131,9 +129,6 @@ class SessionHumanBuyer(SessionBase):
 
 class SessionHumanSeller(SessionBase):
 
-    def __init__(self):
-        super(SessionHumanSeller, self).__init__()
-
     @property
     def is_human_buyer(self):
         return False
@@ -151,19 +146,41 @@ class SessionHumanSeller(SessionBase):
 
 
 class SessionManager:
+    """Singleton class to manage all of the sessions.
+
+    TODO: find a better design than this
+
+    https://medium.com/@mrfksiv/python-design-patterns-2-the-singleton-f995c3198c8
+    """
 
     buyers = {}
     sellers = {}
 
+    def __new__(self):
+        if not hasattr(self, 'instance'):
+            self.instance = super().__new__(self)
+        return self.instance
+
+    @property
+    def db_host(self):
+        try:
+            return self._db_host
+        except Exception as ex:
+            raise AttributeError('You must call `set_db_host` to set the host address'
+                                 f'before creating sessions. {ex}')
+
+    def set_db_host(self, db_host):
+        self._db_host = db_host
+
     def new_buyer(self):
         self.cleanup()
-        buyer = SessionHumanBuyer()
+        buyer = SessionHumanBuyer(self.db_host)
         self.buyers[buyer.uuid] = buyer
         return buyer
 
     def new_seller(self):
         self.cleanup()
-        seller = SessionHumanSeller()
+        seller = SessionHumanSeller(self.db_host)
         self.sellers[seller.uuid] = seller
         return seller
 

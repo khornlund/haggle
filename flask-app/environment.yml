@@ -12,5 +12,6 @@ dependencies:
   - click
   - jupyter
   - flake8
+  - pyyaml
   - pip:
     - -e .
