@@ -1,0 +1,21 @@
+version: "3"
+services:
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.1.0
+    container_name: es
+    environment:
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+    volumes:
+      - ./saved/es:/usr/share/elasticsearch/data
+  web:
+    build: .
+    command: -d --log-dir /tmp/logs
+    container_name: webapp
+    depends_on:
+      - es
+    ports:
+      - 5000:5000
+    volumes:
+      - ./saved/logs:/tmp/logs

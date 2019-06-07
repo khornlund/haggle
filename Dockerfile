@@ -11,4 +11,6 @@ ENV PATH /opt/conda/envs/haggle/bin:$PATH
 
 EXPOSE 5000
 
+# change to the root of the python package so relative paths will work
+WORKDIR /tmp/flask-app/
 ENTRYPOINT ["haggle", "webapp"]

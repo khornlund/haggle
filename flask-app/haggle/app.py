@@ -76,8 +76,8 @@ def message_received(methods=['GET', 'POST']):
 
 # -- top level entry point --
 
-def main(host, port, db_host, debug):
-    setup_logging()
+def main(host, port, db_host, log_dir, debug):
+    setup_logging(log_dir)
     sm = SessionManager()
     sm.set_db_host(db_host)  # set property on singleton
     socketio.run(app, host=host, port=port, debug=True)

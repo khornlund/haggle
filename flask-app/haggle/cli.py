@@ -14,7 +14,8 @@ def cli():
 @click.option('-p', '--port', type=int, default=5000, help='Port to host webapp')
 @click.option('-e', '--elasticsearch-host', type=str, default='es',
               help='Host address of Elasticsearch database')
+@click.option('-l', '--log-dir', type=str, default='/tmp/logs', help='Directory to save logs to')
 @click.option('-d', '--debug', is_flag=True, default=False, help='Flag to run in debug mode')
-def webapp(host, port, elasticsearch_host, debug):
+def webapp(host, port, elasticsearch_host, log_dir, debug):
     """CLI to start the Flask web app"""
-    main(host, port, elasticsearch_host, debug)
+    main(host, port, elasticsearch_host, log_dir, debug)

@@ -18,7 +18,7 @@ docker run -d --name es \
     docker.elastic.co/elasticsearch/elasticsearch:7.1.0
 
 # start the flask app container
-docker run -d --name haggle\
+docker run -d --name haggle \
     --net haggle-net \
     -p 5000:5000 \
     --rm \
