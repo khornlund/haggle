@@ -13,7 +13,7 @@ def cli():
 # @click.option('-i', '--ip-address', type=str, help='IP Address to host webapp')
 def webapp():
     """Run the Flask web app"""
-    socketio.run(app, debug=True)
+    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
 
 
 @cli.command()

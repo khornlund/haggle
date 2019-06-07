@@ -21,7 +21,9 @@ You can start an Elasticsearch instance in a Docker container simply using:
 
 .. code:: bash
 
-    docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.1.0
+    docker run -p 9200:9200 -p 9300:9300 \
+    -e "discovery.type=single-node" \
+    docker.elastic.co/elasticsearch/elasticsearch:7.1.0
 
 Start the Web App
 ~~~~~~~~~~~~~~~~~
