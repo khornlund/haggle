@@ -10,7 +10,7 @@ Simply run:
 
 .. code:: bash
 
-    ./setup-docker.sh
+    docker-compose up
 
 The webapp will be available at ``localhost:5000``.
 
